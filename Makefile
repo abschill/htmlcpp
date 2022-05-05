@@ -129,29 +129,29 @@ HTMLC/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/HTMLC.dir/build.make CMakeFiles/HTMLC.dir/build
 .PHONY : HTMLC/fast
 
-lib/test.o: lib/test.cc.o
-.PHONY : lib/test.o
+lib/entry.o: lib/entry.cc.o
+.PHONY : lib/entry.o
 
 # target to build an object file
-lib/test.cc.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/HTMLC.dir/build.make CMakeFiles/HTMLC.dir/lib/test.cc.o
-.PHONY : lib/test.cc.o
+lib/entry.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/HTMLC.dir/build.make CMakeFiles/HTMLC.dir/lib/entry.cc.o
+.PHONY : lib/entry.cc.o
 
-lib/test.i: lib/test.cc.i
-.PHONY : lib/test.i
+lib/entry.i: lib/entry.cc.i
+.PHONY : lib/entry.i
 
 # target to preprocess a source file
-lib/test.cc.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/HTMLC.dir/build.make CMakeFiles/HTMLC.dir/lib/test.cc.i
-.PHONY : lib/test.cc.i
+lib/entry.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/HTMLC.dir/build.make CMakeFiles/HTMLC.dir/lib/entry.cc.i
+.PHONY : lib/entry.cc.i
 
-lib/test.s: lib/test.cc.s
-.PHONY : lib/test.s
+lib/entry.s: lib/entry.cc.s
+.PHONY : lib/entry.s
 
 # target to generate assembly for a file
-lib/test.cc.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/HTMLC.dir/build.make CMakeFiles/HTMLC.dir/lib/test.cc.s
-.PHONY : lib/test.cc.s
+lib/entry.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/HTMLC.dir/build.make CMakeFiles/HTMLC.dir/lib/entry.cc.s
+.PHONY : lib/entry.cc.s
 
 # Help Target
 help:
@@ -162,9 +162,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... HTMLC"
-	@echo "... lib/test.o"
-	@echo "... lib/test.i"
-	@echo "... lib/test.s"
+	@echo "... lib/entry.o"
+	@echo "... lib/entry.i"
+	@echo "... lib/entry.s"
 .PHONY : help
 
 
