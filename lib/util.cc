@@ -14,6 +14,10 @@ void println(string msg) {
     cout << msg << '\n'; 
 }
 
+void println(int msg) {
+    cout << msg << '\n'; 
+}
+
 void print_arg(tuple<string, string> t) {
     println("Key:");
     println(get<0>(t));
