@@ -38,6 +38,10 @@ T fromJson(dj::json const& t) {
 template<>
 struct Jsonify<htmlc_config> {
     htmlc_config operator()(dj::json const& json) const {
-        return fromJson<htmlc_config>(json);
+        return {
+            .pathRoot = json["pathRoot"].as<string>(),
+            .partials = json["partials"].as<string>(),
+            .templates = json["templates"].as<string>()
+        };
     }
 };
