@@ -1,0 +1,7 @@
+{
+    "ssr_options": {
+        "pathRoot": "views",
+        "partials": "partials",
+        "templates": "templates"
+    }
+}
