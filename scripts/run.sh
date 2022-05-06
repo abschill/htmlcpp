@@ -1,1 +1,1 @@
-cmake . && cmake --build . && ./HTMLC test=args test1=args1
+cmake . && cmake --build . && ./HTMLC .

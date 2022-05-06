@@ -1,7 +1,8 @@
 {
-    "ssr_options": {
+    "config": {
         "pathRoot": "views",
         "partials": "partials",
         "templates": "templates"
-    }
+    },
+    "fallbacks": {}
 }

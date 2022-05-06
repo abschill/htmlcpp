@@ -4,14 +4,11 @@
 #include <iostream>
 #include <fstream>
 #include <dumb_json/json.hpp>
-#include <string>
 #include <filesystem>
-
+#include "config.hpp"
 using std::filesystem::path;
 using std::filesystem::current_path;
 using std::ifstream;
-using std::string;
-
 dj::json json;
 namespace fs = std::filesystem;
 
@@ -21,19 +18,22 @@ string file_to_string(const string& path) {
         std::cerr << "Could Not Open File -" << path << "'" << std::endl;
         exit(EXIT_FAILURE);
     }
-    return string(std::istreambuf_iterator<char>(input_file), std::istreambuf_iterator<char>());
+    string json_string = string(std::istreambuf_iterator<char>(input_file), std::istreambuf_iterator<char>());
+    input_file.close();
+    return json_string;
 }
 
-void find_config() {
-    ifstream config_string;
+void find_config(string config_path) {
+    //todo - config path setup
     fs::path p = current_path();
     fs::path config_file = p / "hcl-config.json";
+    string json_string = file_to_string(config_file);
+    dj::json::result_t res = json.read(json_string);
 
-    string s = file_to_string(config_file);
-    std::cout << "Config module (wip)\n";
-    std::cout << s << '\n';
-    if(json.read(s)) {
-        dj::object_t ssr_opts = json["ssr_config"].as<dj::object_t>();
+    if(!res) {
+        throw std::invalid_argument("Config Not Defined");
     }
-    return;
+
+    htmlc_config ssr_options = json["config"].as<htmlc_config>();
+    std::cout << ssr_options.pathRoot << '\n';
 }
