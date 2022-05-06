@@ -10,6 +10,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    print_placeholder();
+    find_config();
     return 0;
 }
