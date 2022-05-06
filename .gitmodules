@@ -1,0 +1,3 @@
+[submodule "djson"]
+	path = djson
+	url = git@github.com:abschill/djson.git
