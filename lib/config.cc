@@ -17,17 +17,15 @@ string path_to_string(const string& path) {
     return json_string;
 }
 
-void find_config(string config_path) {
+htmlc_config find_config(string config_path) {
     //todo - config path setup
     dj::json conf;
     fs::path p = current_path();
     fs::path c_path = p / "hcl-config.json";
     string c_string = path_to_string(c_path);
     dj::json::result_t res = conf.read(c_string);
-
     if(!res) {
         throw std::invalid_argument("Config Not Defined");
     }
-    htmlc_config config = fromJson<htmlc_config>(conf["config"]);
-    std::cout << config.pathRoot << '\n';
+    return fromJson<htmlc_config>(conf["config"]);
 }

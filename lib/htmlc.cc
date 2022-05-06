@@ -3,7 +3,7 @@
 #include "util.cc"
 int main(int argc, char *argv[]) {
     if(argc > 1) {
-        find_config(argv[1]);
+        htmlc_config conf = find_config(argv[1]);
     }
     else {
         println("Enter the path of your htmlc config");
