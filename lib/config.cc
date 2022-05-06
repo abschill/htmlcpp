@@ -29,6 +29,6 @@ void find_config(string config_path) {
         throw std::invalid_argument("Config Not Defined");
     }
 
-    htmlc_config config = json["config"].as<htmlc_config>();
-    std::cout << config.pathRoot << '\n';
+   // htmlc_config config = fromJson<htmlc_config>(json["config"].as<dj::json>());
+    //std::cout << config.pathRoot << '\n';
 }

@@ -40,8 +40,6 @@ T fromJson(dj::json const& t) {
 template<>
 struct Jsonify<htmlc_config> {
     htmlc_config operator()(dj::json const& json) const {
-        std::string pathRoot;
-        std::string partials;
-        std::string templates;
+        return fromJson<htmlc_config>(json);
     }
 };
