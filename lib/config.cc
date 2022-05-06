@@ -6,7 +6,7 @@ using std::vector;
 
 namespace fs = std::filesystem;
 
-string file_to_string(const string& path) {
+string path_to_string(const string& path) {
     ifstream input_file(path);
     if(!input_file.is_open()) {
         std::cerr << "Could Not Open File -" << path << "'" << std::endl;
@@ -21,9 +21,9 @@ void find_config(string config_path) {
     //todo - config path setup
     dj::json json;
     fs::path p = current_path();
-    fs::path config_file = p / "hcl-config.json";
-    string json_string = file_to_string(config_file);
-    dj::json::result_t res = json.read(json_string);
+    fs::path c_path = p / "hcl-config.json";
+    string c_string = path_to_string(c_path);
+    dj::json::result_t res = json.read(c_string);
 
     if(!res) {
         throw std::invalid_argument("Config Not Defined");
