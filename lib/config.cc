@@ -34,6 +34,6 @@ void find_config(string config_path) {
         throw std::invalid_argument("Config Not Defined");
     }
 
-    htmlc_config ssr_options = json["config"].as<htmlc_config>();
-    std::cout << ssr_options.pathRoot << '\n';
+    htmlc_config config = json["config"].as<htmlc_config>();
+    std::cout << config.pathRoot << '\n';
 }
