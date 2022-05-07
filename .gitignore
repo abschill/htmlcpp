@@ -3,7 +3,7 @@ cmake_install.cmake
 CMakeCache.*
 .vscode/*.log
 HTMLC
+testdir
 
-
-# makefile generated from build script
+# makefile generated from cmake
 Makefile

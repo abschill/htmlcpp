@@ -5,11 +5,11 @@
 #include <fstream>
 #include <filesystem>
 #include <dumb_json/json.hpp>
+
 using std::filesystem::path;
 using std::filesystem::current_path;
 using std::ifstream;
 using std::vector;
-namespace fs = std::filesystem;
 using std::string;
 
 struct htmlc_config {
