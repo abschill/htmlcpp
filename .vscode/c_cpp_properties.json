@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}"
+                "${workspaceFolder}",
+                "${workspaceFolder}/djson/include"
             ],
             "defines": [],
             "compilerPath": "/bin/g++",

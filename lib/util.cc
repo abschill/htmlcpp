@@ -10,15 +10,24 @@ using std::make_tuple;
 using std::get;
 
 // helper function for quicker prints of short strings
-void println(string msg) {
+const void println(string msg) {
     cout << msg << '\n'; 
 }
 
-void println(int msg) {
+const void println(int msg) {
     cout << msg << '\n'; 
 }
 
-void print_arg(tuple<string, string> t) {
+const void println(bool msg) {
+    if(msg == true ) {
+        println("true");
+    }
+    else {
+        println("false");
+    }
+}
+
+const void print_arg(tuple<string, string> t) {
     println("Key:");
     println(get<0>(t));
     println("Value:");
@@ -27,7 +36,7 @@ void print_arg(tuple<string, string> t) {
 }
 
 // parse a key=value arg from execution context
-tuple<string, string> parse_inline_arg(string keyval) {
+const tuple<string, string> parse_inline_arg(string keyval) {
     string key = keyval.substr(0, keyval.find("="));
     // add 1 to the size to offset the delim
     string val = keyval.substr(key.size() + 1, keyval.size());

@@ -1,12 +1,6 @@
 #include "config.hpp"
-using std::filesystem::path;
-using std::filesystem::current_path;
-using std::ifstream;
-using std::vector;
 
-namespace fs = std::filesystem;
-
-string path_to_string(const string& path) {
+const string path_to_string(const string& path) {
     ifstream input_file(path);
     if(!input_file.is_open()) {
         std::cerr << "Could Not Open File -" << path << "'" << std::endl;
@@ -17,7 +11,7 @@ string path_to_string(const string& path) {
     return json_string;
 }
 
-htmlc_config find_config(string config_path) {
+const htmlc_config find_config(string config_path) {
     //todo - config path setup
     dj::json conf;
     fs::path p = current_path();
@@ -28,4 +22,8 @@ htmlc_config find_config(string config_path) {
         throw std::invalid_argument("Config Not Defined");
     }
     return fromJson<htmlc_config>(conf["config"]);
+}
+
+bool valid_path(string pathname) {
+    return fs::exists(pathname);
 }

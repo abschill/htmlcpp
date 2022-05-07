@@ -52,6 +52,7 @@
         "optional": "cpp",
         "ratio": "cpp",
         "sstream": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "map": "cpp"
     }
 }
