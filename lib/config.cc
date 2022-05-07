@@ -21,15 +21,8 @@ const string valid_config_path(string c_path) {
 }
 
 const htmlc_config find_config(string config_path) {
-    fs::path p;
-    if(config_path != ".") {
-        p  = valid_config_path(config_path);
-    }
-    else {
-        p = current_path();
-    }
+    fs::path p = valid_config_path(config_path);
     dj::json conf;
-    
     fs::path c_path = p / "hcl-config.json";
     string c_string = path_to_string(c_path);
     dj::json::result_t res = conf.read(c_string);
