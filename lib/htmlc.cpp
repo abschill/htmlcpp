@@ -7,18 +7,22 @@ using std::make_tuple;
 
 namespace fs = std::filesystem;
 
+// bind method to call config from file with given generic
 namespace htmlc {
+
     template <typename T>
     T fromJson(dj::json const& json) {
         return json.as<T>;
     }
 }
 
+// root namespace to implement 
 namespace htmlc {
+
     struct config {
-        std::string pathRoot{};
-        std::string partials{};
-        std::string templates{};
+        std::string pathRoot{}; // root path relative to <cwd>
+        std::string partials{}; //partial root relative to <cwd>/<pathRoot>
+        std::string templates{}; //template root relative to <cwd>/<pathRoot>
     };
 
     string valid_config_path(string c_path) {
@@ -29,6 +33,7 @@ namespace htmlc {
             throw std::invalid_argument("config path invalid");
         }
     }
+    
     struct info {
         config u_config{};
     };
@@ -42,6 +47,7 @@ namespace htmlc {
     info fromJson<info>(dj::json const& info) {
         return {fromJson<config>(info["config"])};
     }
+
     string path_to_string(const string& path) {
         ifstream input_file(path);
         if(!input_file.is_open()) {
@@ -51,7 +57,6 @@ namespace htmlc {
         input_file.close();
         return json_string;
     }
-
     
     config find_config(string config_path) {
         fs::path p = valid_config_path(config_path);
