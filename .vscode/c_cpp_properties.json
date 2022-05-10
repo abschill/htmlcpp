@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}",
-                "${workspaceFolder}/djson/include"
+                "${workspaceFolder}/djson/include",
+                "${workspaceFolder}/djson"
             ],
             "defines": [],
             "compilerPath": "/bin/g++",

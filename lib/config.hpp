@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
-#include <dumb_json/json.hpp>
+#include <djson/json.hpp>
 
 using std::filesystem::path;
 using std::filesystem::current_path;
@@ -28,7 +28,7 @@ template <typename T>
 struct Jsonify;
 
 template <typename T>
-    requires dj::json::is_settable<T>
+    requires dj::Element<T>
 struct Jsonify<T>: Converter<T, dj::json> {
     dj::json operator()(T const& t) const { return dj::json(t); }
     T operator()(dj::json const& json) const { return json.as<T>(); }
