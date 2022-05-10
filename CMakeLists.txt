@@ -6,7 +6,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_subdirectory(djson)
 add_subdirectory(fmt)
-add_executable(HTMLC lib/htmlc.cpp)
+add_executable(HTMLC)
+target_sources(HTMLC PRIVATE
+    lib/htmlc.hpp
+    lib/htmlc.cpp
+)
 configure_file(HTMLC.in.h HTMLC.h)
 target_link_libraries(HTMLC djson::djson fmt::fmt)
 target_include_directories(HTMLC PUBLIC 
