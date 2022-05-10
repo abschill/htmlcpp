@@ -1,6 +1,7 @@
 #include "config.hpp"
 namespace fs = std::filesystem;
-const string path_to_string(const string& path) {
+
+string path_to_string(const string& path) {
     ifstream input_file(path);
     if(!input_file.is_open()) {
         throw std::invalid_argument("config path invalid");
@@ -10,7 +11,7 @@ const string path_to_string(const string& path) {
     return json_string;
 }
 
-const string valid_config_path(string c_path) {
+string valid_config_path(string c_path) {
     if(fs::exists(c_path)) {
         return c_path;
     }
@@ -19,7 +20,7 @@ const string valid_config_path(string c_path) {
     }
 }
 
-const htmlc_config find_config(string config_path) {
+htmlc_config find_config(string config_path) {
     fs::path p = valid_config_path(config_path);
     dj::json conf;
     fs::path c_path = p / "htmlc.json";

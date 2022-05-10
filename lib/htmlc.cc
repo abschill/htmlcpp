@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
         fmt::print("root: {}\npartials: {}\ntemplates: {}\n", conf.pathRoot, conf.partials, conf.templates);
     }
     else {
-        println("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs");
+        fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs");
     }
 
     return 0;
