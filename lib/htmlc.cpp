@@ -25,7 +25,7 @@ namespace htmlc {
         }
     }
     struct info {
-        config config{};
+        config u_config{};
     };
 
     template<>
@@ -48,7 +48,7 @@ namespace htmlc {
     }
 
     
-    htmlc::config find_config(string config_path) {
+    config find_config(string config_path) {
         fs::path p = valid_config_path(config_path);
         dj::json conf;
         fs::path c_path = p / "htmlc.json";
@@ -57,7 +57,7 @@ namespace htmlc {
         if(!res) {
             throw std::invalid_argument("config not defined");
         }
-        return htmlc::fromJson<htmlc::config>(conf["config"]);
+        return htmlc::fromJson<config>(conf["config"]);
     }
 
     // parse a key=value arg from execution context
