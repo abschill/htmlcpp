@@ -2,6 +2,11 @@
 #include "htmlc.hpp"
 #include <fmt/core.h>
 
+using std::tuple;
+using std::make_tuple;
+
+namespace fs = std::filesystem;
+
 namespace htmlc {
     template <typename T>
     T fromJson(dj::json const& json) {
