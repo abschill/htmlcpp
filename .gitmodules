@@ -1,3 +1,6 @@
 [submodule "djson"]
 	path = djson
 	url = git@github.com:abschill/djson.git
+[submodule "fmt"]
+	path = fmt
+	url = git@github.com:fmtlib/fmt.git

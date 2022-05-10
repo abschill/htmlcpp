@@ -9,3 +9,4 @@ Makefile
 
 # c lang daemon cache
 .cache
+compile_commands.json
