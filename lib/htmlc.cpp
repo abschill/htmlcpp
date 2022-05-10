@@ -1,6 +1,6 @@
 #include "HTMLC.in.h"
-#include "config.cc"
-#include "util.cc"
+#include "config.cpp"
+#include "util.cpp"
 #include <fmt/core.h>
 
 int main(int argc, char *argv[]) {
