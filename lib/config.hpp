@@ -43,9 +43,9 @@ template<>
 struct Jsonify<htmlc_config> {
     htmlc_config operator()(dj::json const& json) const {
         return {
-            .pathRoot = json["pathRoot"].as<string>(),
-            .partials = json["partials"].as<string>(),
-            .templates = json["templates"].as<string>()
+            .pathRoot = json["pathRoot"],
+            .partials = json["partials"],
+            .templates = json["templates"]
         };
     }
 };
