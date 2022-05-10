@@ -6,3 +6,6 @@ HTMLC
 
 # makefile generated from cmake
 Makefile
+
+# c lang daemon cache
+.cache
