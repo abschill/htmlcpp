@@ -86,6 +86,7 @@ int main(int argc, char *argv[]) {
     }
     else {
         fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs\nexit code: 1\n");
+        return 1;
     }
 
     return 0;
