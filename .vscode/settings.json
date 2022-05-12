@@ -54,5 +54,6 @@
         "sstream": "cpp",
         "variant": "cpp",
         "map": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": true
 }

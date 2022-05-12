@@ -6,6 +6,8 @@ HTMLC
 
 # makefile generated from cmake
 Makefile
+# vscode cmake directory
+build
 
 # c lang daemon cache
 .cache

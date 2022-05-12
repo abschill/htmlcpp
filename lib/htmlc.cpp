@@ -23,6 +23,9 @@ namespace htmlc {
         std::string pathRoot{}; // root path relative to <cwd>
         std::string partials{}; //partial root relative to <cwd>/<pathRoot>
         std::string templates{}; //template root relative to <cwd>/<pathRoot>
+        bool dry;
+        bool throw_errors;
+        
     };
 
     string valid_config_path(string c_path) {
@@ -70,22 +73,19 @@ namespace htmlc {
         return htmlc::fromJson<config>(conf["config"]);
     }
 
-    // parse a key=value arg from execution context
-    tuple<string, string> parse_inline_arg(string keyval) {
-        string key = keyval.substr(0, keyval.find("="));
-        // add 1 to the size to offset the delim
-        string val = keyval.substr(key.size() + 1, keyval.size());
-        return make_tuple(key, val);
+    void print_config(htmlc::config conf) {
+        fmt::print("root: {}\npartials: {}\ntemplates: {}\ndry: {}\nthrow_errors: {}\n", 
+        conf.pathRoot, conf.partials, conf.templates, conf.dry, conf.throw_errors);
     }
 }
 
 int main(int argc, char *argv[]) {
     if(argc > 1) {
         htmlc::config conf = htmlc::find_config(argv[1]);  
-        fmt::print("root: {}\npartials: {}\ntemplates: {}\n", conf.pathRoot, conf.partials, conf.templates);
+        htmlc::print_config(conf);
     }
     else {
-        fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs");
+        fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs\nexit code: 1\n");
     }
 
     return 0;

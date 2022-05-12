@@ -2,7 +2,9 @@
     "config": {
         "pathRoot": "views",
         "partials": "partials",
-        "templates": "templates"
+        "templates": "templates",
+        "run_dry": false,
+        "throw_errors": true
     },
-    "fallbacks": {}
+    "chunk_data": {}
 }
