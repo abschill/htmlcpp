@@ -25,8 +25,8 @@ namespace htmlc {
         std::string pathRoot{}; // root path relative to <cwd>
         std::string partials{}; //partial root relative to <cwd>/<pathRoot>
         std::string templates{}; //template root relative to <cwd>/<pathRoot>
-        bool dry;
-        bool silent_errors;
+        bool dry; //whether or not to compile the HTML or just test for any errors in the compilation process
+        bool silent_errors; //if true, try to push through any compilation errors without resolving the error.
     };
 
     string valid_config_path(string c_path) {
@@ -83,9 +83,8 @@ namespace htmlc {
         return fmt::format("{}/{}", p0, p1);
     }
 
+    // return a string with any error from validating the config, so if there is an issue the top level process can format the string in the error msg
     string validate_config(htmlc::config conf) {
-        // todo - add checks after the silence to see if its actually valid or not 
-        // for now this is just seeing if they turn off errors as the only condition
         if(conf.silent_errors) {
             return "";
         }
