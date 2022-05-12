@@ -3,8 +3,7 @@
         "pathRoot": "views",
         "partials": "partials",
         "templates": "templates",
-        "run_dry": false,
-        "throw_errors": true
+        "run_dry": false
     },
     "chunk_data": {}
 }

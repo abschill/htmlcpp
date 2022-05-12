@@ -1,6 +1,8 @@
 #include <HTMLC.h>
+#include "fmt/format.h"
 #include "htmlc.hpp"
 #include <fmt/core.h>
+#include <filesystem>
 
 using std::tuple;
 using std::make_tuple;
@@ -24,8 +26,7 @@ namespace htmlc {
         std::string partials{}; //partial root relative to <cwd>/<pathRoot>
         std::string templates{}; //template root relative to <cwd>/<pathRoot>
         bool dry;
-        bool throw_errors;
-        
+        bool silent_errors;
     };
 
     string valid_config_path(string c_path) {
@@ -68,14 +69,40 @@ namespace htmlc {
         string c_string = path_to_string(c_path);
         auto res = conf.read(c_string);
         if(!res) {
-            throw std::invalid_argument("config not defined");
+            throw std::invalid_argument("htmlc.json not defined");
         }
         return htmlc::fromJson<config>(conf["config"]);
     }
 
     void print_config(htmlc::config conf) {
-        fmt::print("root: {}\npartials: {}\ntemplates: {}\ndry: {}\nthrow_errors: {}\n", 
-        conf.pathRoot, conf.partials, conf.templates, conf.dry, conf.throw_errors);
+        fmt::print("root: {}\npartials: {}\ntemplates: {}\ndry: {}\nsilent_errors: {}\n", 
+        conf.pathRoot, conf.partials, conf.templates, conf.dry, conf.silent_errors);
+    }
+
+    fs::path append_paths(string p0, string p1) {
+        return fmt::format("{}/{}", p0, p1);
+    }
+
+    string validate_config(htmlc::config conf) {
+        // todo - add checks after the silence to see if its actually valid or not 
+        // for now this is just seeing if they turn off errors as the only condition
+        if(conf.silent_errors) {
+            return "";
+        }
+        
+        if(!fs::exists(conf.pathRoot)) {
+            return "path root";
+        }
+
+        if(!fs::exists(htmlc::append_paths(conf.pathRoot, conf.partials))) {
+            return "<pathRoot>/partials";
+        }
+
+        if(!fs::exists(htmlc::append_paths(conf.pathRoot, conf.templates))) {
+            return "<pathRoot>/templates";
+        }
+
+        return "";
     }
 }
 
@@ -83,6 +110,12 @@ int main(int argc, char *argv[]) {
     if(argc > 1) {
         htmlc::config conf = htmlc::find_config(argv[1]);  
         htmlc::print_config(conf);
+        string config_err = htmlc::validate_config(conf);
+
+        if(config_err != "") {
+            fmt::print("error: {}\n exit code: 1\n", config_err);
+            return 1;
+        }
     }
     else {
         fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs\nexit code: 1\n");

@@ -2,7 +2,8 @@
     "config": {
         "pathRoot": "testviews",
         "partials": "testpartials",
-        "templates": "testtemplates"
+        "templates": "testtemplates",
+        "silent_errors": false
     },
     "fallbacks": {}
 }
