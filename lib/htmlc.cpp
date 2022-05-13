@@ -118,7 +118,7 @@ namespace htmlc {
         bool valid_partials = false;
         bool valid_templates = false;
         for(const auto &entry : fs::directory_iterator(config.pathRoot)) {
-            auto path_str = entry.path().string();
+            string path_str = entry.path().string();
             if(path_str.find(config.templates) != std::string::npos) {
                 valid_templates = true;
             }
