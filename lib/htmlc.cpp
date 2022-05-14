@@ -2,6 +2,7 @@
 #include "fmt/format.h"
 #include "htmlc.hpp"
 #include <fmt/core.h>
+#include <fmt/color.h>
 #include <filesystem>
 namespace fs = std::filesystem;
 
@@ -84,9 +85,31 @@ namespace htmlc {
         return htmlc::fromJson<config>(conf["config"]);
     }
 
+    // print key with correct format color
+    void print_config_key(string val) {
+        fmt::print(fg(fmt::color::gold), "{}: ", val);
+    }
+
+    // print value with correct format color and suffix for stdout
+    void print_config_val(string val) {
+        fmt::print(fg(fmt::color::alice_blue), "{};\n", val);
+    }
+
+    // abstract each entry into one line for printing
+    void print_config_entry(string key, string val) {
+        print_config_key(key);
+        print_config_val(val);
+    }
+
     void print_config(htmlc::config conf) {
-        fmt::print("root: {}\npartials: {}\ntemplates: {}\ndry: {}\nsilent_errors: {}\n", 
-        conf.pathRoot, conf.partials, conf.templates, conf.dry, conf.silent_errors);
+        fmt::print(fg(fmt::color::green),"resolved config: \n");
+        fmt::print("{{\n");
+        print_config_entry("\tpathRoot", conf.pathRoot);
+        print_config_entry("\tpartials", conf.partials);
+        print_config_entry("\ttemplates", conf.templates);
+        print_config_entry("\tdry", conf.dry ? "true" : "false");
+        print_config_entry("\tsilent_errors", conf.silent_errors ? "true" : "false");
+        fmt::print("}}\n");
     }
 
     fs::path append_paths(string p0, string p1) {

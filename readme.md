@@ -1,4 +1,4 @@
-# htmlc 
+# htmlc
 
 ## a simple syntax format for writing DRY components inside HTML comments.
 
