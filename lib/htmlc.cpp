@@ -6,16 +6,7 @@
 #include <filesystem>
 namespace fs = std::filesystem;
 
-// bind method to call config from file with given generic
-namespace htmlc {
-
-    template <typename T>
-    T fromJson(dj::json const& json) {
-        return json.as<T>;
-    }
-}
-
-// root namespace to implement
+// root namespace 
 namespace htmlc {
 
     enum chunk_type {
@@ -41,12 +32,8 @@ namespace htmlc {
     };
 
     string valid_cpath(string c_path) {
-        if(fs::exists(c_path)) {
-            return c_path;
-        }
-        else {
-            throw std::invalid_argument("config path invalid");
-        }
+        return fs::exists(c_path) ? c_path:
+        throw std::invalid_argument("config path invalid");
     }
 
     struct info {
@@ -79,15 +66,13 @@ namespace htmlc {
         fs::path c_path = p / "htmlc.json";
         string c_string = file_to_string(c_path);
         auto res = conf.read(c_string);
-        if(!res) {
-            throw std::invalid_argument("htmlc.json not defined");
-        }
-        return htmlc::fromJson<config>(conf["config"]);
+        return res ? htmlc::fromJson<config>(conf["config"]):
+        throw std::invalid_argument("htmlc.json not defined");
     }
 
     // print key with correct format color
     void print_config_key(string val) {
-        fmt::print(fg(fmt::color::gold), "{}: ", val);
+        fmt::print(fg(fmt::color::gold), "\t{}: ", val);
     }
 
     // print value with correct format color and suffix for stdout
@@ -104,11 +89,11 @@ namespace htmlc {
     void print_config(htmlc::config conf) {
         fmt::print(fg(fmt::color::green),"resolved config: \n");
         fmt::print("{{\n");
-        print_config_entry("\tpathRoot", conf.pathRoot);
-        print_config_entry("\tpartials", conf.partials);
-        print_config_entry("\ttemplates", conf.templates);
-        print_config_entry("\tdry", conf.dry ? "true" : "false");
-        print_config_entry("\tsilent_errors", conf.silent_errors ? "true" : "false");
+        print_config_entry("pathRoot", conf.pathRoot);
+        print_config_entry("partials", conf.partials);
+        print_config_entry("templates", conf.templates);
+        print_config_entry("dry", conf.dry ? "true" : "false");
+        print_config_entry("silent_errors", conf.silent_errors ? "true" : "false");
         fmt::print("}}\n");
     }
 
@@ -137,19 +122,27 @@ namespace htmlc {
         return "";
     }
 
-    bool validate_paths(htmlc::config config) {
-        bool valid_partials = false;
-        bool valid_templates = false;
-        for(const auto &entry : fs::directory_iterator(config.pathRoot)) {
-            string path_str = entry.path().string();
-            if(path_str.find(config.templates) != std::string::npos) {
-                valid_templates = true;
-            }
-            if(path_str.find(config.partials) != std::string::npos) {
-                valid_partials = true;
-            }
+    bool target_isvalid(string c_path) {
+        bool is_html = (bool)(c_path.find(".html", 0) != -1);
+        bool is_htmlc = (bool)(c_path.find(".htmlc", 0) != -1);
+        return (is_html || is_htmlc);
+    }
+
+    void print_chunkmap(htmlc::config conf) {
+        std::string root = conf.pathRoot;
+        std::string partials = root + "/" + conf.partials;
+        std::string templates = root + "/" + conf.templates;
+
+        for (const auto & entry : fs::directory_iterator(partials)) {
+            string c_path = entry.path();
+            bool is_valid = htmlc::target_isvalid(c_path);
+            if(is_valid) fmt::print(fg(fmt::color::sea_green), "Partial:\n{}\n", c_path);
         }
-        return valid_partials && valid_templates;
+        for (const auto & entry : fs::directory_iterator(templates)) {
+            string c_path = entry.path();
+            bool is_valid = htmlc::target_isvalid(c_path);
+            if(is_valid) fmt::print(fg(fmt::color::sea_green), "Chunk: \n{}\n", c_path);
+        }
     }
 }
 
@@ -163,10 +156,7 @@ int main(int argc, char *argv[]) {
             fmt::print("error: {}\n exit code: 1\n", config_err);
             return 1;
         }
-
-        bool has_paths = htmlc::validate_paths(conf);
-
-        fmt::print("has paths: {}\n", has_paths);
+        htmlc::print_chunkmap(conf);
     }
     else {
         fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs\nexit code: 1\n");

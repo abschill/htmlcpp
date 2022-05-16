@@ -53,7 +53,16 @@
         "ratio": "cpp",
         "sstream": "cpp",
         "variant": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "any": "cpp",
+        "charconv": "cpp",
+        "complex": "cpp",
+        "cstring": "cpp",
+        "list": "cpp",
+        "set": "cpp",
+        "span": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp"
     },
     "cmake.configureOnOpen": true
 }
