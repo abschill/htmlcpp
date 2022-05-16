@@ -1,6 +1,7 @@
 #include <HTMLC.h>
 #include "htmlc.hpp"
 
+
 // root namespace
 namespace htmlc {
 
@@ -89,6 +90,7 @@ int main(int argc, char *argv[]) {
             return 1;
         }
         htmlc::print_chunkmap(conf);
+        fmt::print("{}", htmlc_ast::to_directive("render", "foo"));
     }
     else {
         fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs\nexit code: 1\n");

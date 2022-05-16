@@ -8,6 +8,8 @@
 #include "fmt/format.h"
 #include <fmt/core.h>
 #include <fmt/color.h>
+#include "ast.hpp"
+
 namespace fs = std::filesystem;
 using std::ifstream;
 using std::string;
@@ -41,7 +43,7 @@ namespace htmlc {
     }
 }
 
-// internals for root lib namespace
+// internals for root lib namespace (logging, validation, etc)
 namespace htmlc_i {
 
     string file_to_string(const string& path) {
