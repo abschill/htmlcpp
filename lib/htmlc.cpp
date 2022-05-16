@@ -61,6 +61,40 @@ namespace htmlc {
         return "";
     }
 
+    htmlc::chunkmap get_chunkmap(htmlc::config conf) {
+        std::vector<htmlc::chunk> resolved_chunks = {};
+        std::vector<htmlc::chunk> resolved_pages = {};
+        std::string root = conf.root;
+        std::string chunks = root + "/" + conf.chunks;
+        std::string pages = root + "/" + conf.pages;
+
+        for (const auto & entry : fs::directory_iterator(chunks)) {
+            string c_path = entry.path();
+            bool is_valid = htmlc_i::target_isvalid(c_path);
+            if(is_valid) {
+                string f_contents = htmlc_i::file_to_string(c_path);
+                resolved_chunks.push_back(htmlc::chunk{
+                    .chunk_name = c_path,
+                    .chunk_path = c_path,
+                    .chunk_raw = f_contents
+                });
+            }
+        }
+        for (const auto & entry : fs::directory_iterator(pages)) {
+            string c_path = entry.path();
+            bool is_valid = htmlc_i::target_isvalid(c_path);
+            if(is_valid) {
+                string f_contents = htmlc_i::file_to_string(c_path);
+                resolved_pages.push_back(htmlc::chunk{
+                    .chunk_name = c_path,
+                    .chunk_path = c_path,
+                    .chunk_raw = f_contents
+                });
+            }
+        }
+        return htmlc::chunkmap{ resolved_chunks, resolved_pages };
+    };
+
     void print_chunkmap(htmlc::config conf) {
         std::string root = conf.root;
         std::string chunks = root + "/" + conf.chunks;
@@ -74,7 +108,10 @@ namespace htmlc {
         for (const auto & entry : fs::directory_iterator(pages)) {
             string c_path = entry.path();
             bool is_valid = htmlc_i::target_isvalid(c_path);
-            if(is_valid) fmt::print(fg(fmt::color::sea_green), "Page: \n{}\n", c_path);
+            if(is_valid) {
+                fmt::print(fg(fmt::color::sea_green), "Page: \n{}\n", c_path);
+                fmt::print("Content: \n{}\n", htmlc_i::file_to_string(c_path));
+            }
         }
     }
 }
@@ -89,8 +126,9 @@ int main(int argc, char *argv[]) {
             fmt::print("error: {}\n exit code: 1\n", config_err);
             return 1;
         }
-        htmlc::print_chunkmap(conf);
-        fmt::print("{}", htmlc_ast::to_directive("render", "foo"));
+
+        fmt::print("{}\n", htmlc_parser::to_directive("render", "foo"));
+        fmt::print("{}\n", htmlc::get_chunkmap(conf).resolved_pages.size());
     }
     else {
         fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs\nexit code: 1\n");

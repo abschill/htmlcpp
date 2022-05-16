@@ -8,7 +8,7 @@
 #include "fmt/format.h"
 #include <fmt/core.h>
 #include <fmt/color.h>
-#include "ast.hpp"
+#include "parser.hpp"
 
 namespace fs = std::filesystem;
 using std::ifstream;
@@ -16,19 +16,17 @@ using std::string;
 
 // bind method to call config from file with given generic
 namespace htmlc {
-    enum chunk_type {
-        chunk = 0,
-        page = 1,
-        page_builder = 2
-    };
 
-    struct chunk {
-        chunk_type type;
+    typedef struct {
         std::string chunk_name;
         std::string chunk_path;
         std::string chunk_raw;
-        bool needs_render;
-    };
+    } chunk;
+
+    typedef struct {
+        std::vector<chunk> resolved_chunks;
+        std::vector<chunk> resolved_pages;
+    } chunkmap;
 
     struct config {
         std::string root{}; // root path relative to <cwd>
