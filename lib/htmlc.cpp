@@ -1,40 +1,8 @@
 #include <HTMLC.h>
-#include "fmt/format.h"
 #include "htmlc.hpp"
-#include <fmt/core.h>
-#include <fmt/color.h>
-#include <filesystem>
-namespace fs = std::filesystem;
 
-// root namespace 
+// root namespace
 namespace htmlc {
-
-    enum chunk_type {
-        partial = 0,
-        page = 1,
-        page_builder = 2
-    };
-
-    struct chunk {
-        chunk_type type;
-        std::string chunk_name;
-        std::string chunk_path;
-        std::string chunk_raw;
-        bool needs_render;
-    };
-
-    struct config {
-        std::string pathRoot{}; // root path relative to <cwd>
-        std::string partials{}; //partial root relative to <cwd>/<pathRoot>
-        std::string templates{}; //template root relative to <cwd>/<pathRoot>
-        bool dry; //whether or not to compile the HTML or just test for any errors in the compilation process
-        bool silent_errors; //if true, try to push through any compilation errors without resolving the error.
-    };
-
-    string valid_cpath(string c_path) {
-        return fs::exists(c_path) ? c_path:
-        throw std::invalid_argument("config path invalid");
-    }
 
     struct info {
         config u_config{};
@@ -42,7 +10,7 @@ namespace htmlc {
 
     template<>
     config fromJson<config>(dj::json const& config) {
-        return {config["pathRoot"], config["partials"], config["templates"]};
+        return {config["root"], config["chunks"], config["pages"]};
     }
 
     template<>
@@ -50,55 +18,25 @@ namespace htmlc {
         return {fromJson<config>(info["config"])};
     }
 
-    string file_to_string(const string& path) {
-        ifstream input_file(path);
-        if(!input_file.is_open()) {
-            throw std::invalid_argument("config path invalid");
-        }
-        string json_string = string(std::istreambuf_iterator<char>(input_file), std::istreambuf_iterator<char>());
-        input_file.close();
-        return json_string;
-    }
-
     config find_config(string config_path) {
-        fs::path p = valid_cpath(config_path);
+        fs::path p = internals::valid_cpath(config_path);
         dj::json conf;
         fs::path c_path = p / "htmlc.json";
-        string c_string = file_to_string(c_path);
+        string c_string = internals::file_to_string(c_path);
         auto res = conf.read(c_string);
         return res ? htmlc::fromJson<config>(conf["config"]):
         throw std::invalid_argument("htmlc.json not defined");
     }
 
-    // print key with correct format color
-    void print_config_key(string val) {
-        fmt::print(fg(fmt::color::gold), "\t{}: ", val);
-    }
-
-    // print value with correct format color and suffix for stdout
-    void print_config_val(string val) {
-        fmt::print(fg(fmt::color::alice_blue), "{};\n", val);
-    }
-
-    // abstract each entry into one line for printing
-    void print_config_entry(string key, string val) {
-        print_config_key(key);
-        print_config_val(val);
-    }
-
     void print_config(htmlc::config conf) {
         fmt::print(fg(fmt::color::green),"resolved config: \n");
         fmt::print("{{\n");
-        print_config_entry("pathRoot", conf.pathRoot);
-        print_config_entry("partials", conf.partials);
-        print_config_entry("templates", conf.templates);
-        print_config_entry("dry", conf.dry ? "true" : "false");
-        print_config_entry("silent_errors", conf.silent_errors ? "true" : "false");
+        internals::print_config_entry("root", conf.root);
+        internals::print_config_entry("chunks", conf.chunks);
+        internals::print_config_entry("pages", conf.pages);
+        internals::print_config_entry("dry", conf.dry ? "true" : "false");
+        internals::print_config_entry("silent_errors", conf.silent_errors ? "true" : "false");
         fmt::print("}}\n");
-    }
-
-    fs::path append_paths(string p0, string p1) {
-        return fmt::format("{}/{}", p0, p1);
     }
 
     // return a string with any error from validating the config, so if there is an issue the top level process can format the string in the error msg
@@ -107,41 +45,35 @@ namespace htmlc {
             return "";
         }
 
-        if(!fs::exists(conf.pathRoot)) {
+        if(!fs::exists(conf.root)) {
             return "path root";
         }
 
-        if(!fs::exists(htmlc::append_paths(conf.pathRoot, conf.partials))) {
+        if(!fs::exists(internals::append_paths(conf.root, conf.chunks))) {
             return "<pathRoot>/partials";
         }
 
-        if(!fs::exists(htmlc::append_paths(conf.pathRoot, conf.templates))) {
+        if(!fs::exists(internals::append_paths(conf.root, conf.pages))) {
             return "<pathRoot>/templates";
         }
 
         return "";
     }
 
-    bool target_isvalid(string c_path) {
-        bool is_html = (bool)(c_path.find(".html", 0) != -1);
-        bool is_htmlc = (bool)(c_path.find(".htmlc", 0) != -1);
-        return (is_html || is_htmlc);
-    }
-
     void print_chunkmap(htmlc::config conf) {
-        std::string root = conf.pathRoot;
-        std::string partials = root + "/" + conf.partials;
-        std::string templates = root + "/" + conf.templates;
+        std::string root = conf.root;
+        std::string chunks = root + "/" + conf.chunks;
+        std::string pages = root + "/" + conf.pages;
 
-        for (const auto & entry : fs::directory_iterator(partials)) {
+        for (const auto & entry : fs::directory_iterator(chunks)) {
             string c_path = entry.path();
-            bool is_valid = htmlc::target_isvalid(c_path);
-            if(is_valid) fmt::print(fg(fmt::color::sea_green), "Partial:\n{}\n", c_path);
+            bool is_valid = internals::target_isvalid(c_path);
+            if(is_valid) fmt::print(fg(fmt::color::sea_green), "Chunk:\n{}\n", c_path);
         }
-        for (const auto & entry : fs::directory_iterator(templates)) {
+        for (const auto & entry : fs::directory_iterator(pages)) {
             string c_path = entry.path();
-            bool is_valid = htmlc::target_isvalid(c_path);
-            if(is_valid) fmt::print(fg(fmt::color::sea_green), "Chunk: \n{}\n", c_path);
+            bool is_valid = internals::target_isvalid(c_path);
+            if(is_valid) fmt::print(fg(fmt::color::sea_green), "Page: \n{}\n", c_path);
         }
     }
 }

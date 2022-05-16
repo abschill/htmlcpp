@@ -1,8 +1,8 @@
 {
     "config": {
-        "pathRoot": "views",
-        "partials": "partials",
-        "templates": "templates",
+        "root": "views",
+        "chunks": "partials",
+        "pages": "templates",
         "run_dry": false
     },
     "chunk_data": {}
