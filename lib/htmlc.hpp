@@ -2,17 +2,12 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
-#include <iostream>
 #include <fstream>
-#include <filesystem>
-#include <iostream>
-#include <string>
 #include <tuple>
 #include <djson/json.hpp>
 #include "fmt/format.h"
 #include <fmt/core.h>
 #include <fmt/color.h>
-#include <filesystem>
 namespace fs = std::filesystem;
 using std::ifstream;
 using std::string;
@@ -46,7 +41,8 @@ namespace htmlc {
     }
 }
 
-namespace internals {
+// internals for root lib namespace
+namespace htmlc_i {
 
     string file_to_string(const string& path) {
         ifstream input_file(path);
