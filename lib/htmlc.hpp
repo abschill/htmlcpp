@@ -16,7 +16,6 @@ using std::ifstream;
 using std::string;
 // bind method to call config from file with given generic
 namespace htmlc {
-
     typedef struct {
         std::string chunk_name;
         std::string chunk_path;
@@ -36,6 +35,7 @@ namespace htmlc {
         bool dry; //whether or not to compile the HTML or just test for any errors in the compilation process
         bool silent_errors; //if true, try to push through any compilation errors without resolving the error.
     };
+  
     template <typename T>
     T fromJson(dj::json const& json) {
         return json.as<T>;

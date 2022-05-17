@@ -23,7 +23,8 @@ namespace htmlc {
         fs::path p = htmlc_i::valid_cpath(config_path);
         dj::json conf;
         fs::path c_path = p / "htmlc.json";
-        string c_string = htmlc_i::file_to_string(c_path);
+        string c
+	  _string = htmlc_i::file_to_string(c_path);
         auto res = conf.read(c_string);
         return res ? htmlc::fromJson<config>(conf["config"]):
         throw std::invalid_argument("htmlc.json not defined");
@@ -128,6 +129,15 @@ int main(int argc, char *argv[]) {
             fmt::print("error: {}\n exit code: 1\n", config_err);
             return 1;
         }
+	/**
+	 * Todo: we have the following information at this stage:
+	 * 1. map of the chunks relative to the submitted configuration
+	 * 2. struct properties that tell us if a given chunk requires the render engine to pass over it
+	 * 3. the content of each raw chunk along with its path relative to the defined configuration roots
+	 * We will need to implement the following:
+	 * 1. tokenization stage for each non-static chunk that was resolved.
+	 * 2. generic struct mappings for arbitrary user input into chunk input configuration attribute
+	 **/
         fmt::print("{}\n", htmlc::get_chunkmap(conf).resolved_pages[0].is_static);
     }
     else {
