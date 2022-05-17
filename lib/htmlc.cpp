@@ -76,7 +76,8 @@ namespace htmlc {
                 resolved_chunks.push_back(htmlc::chunk{
                     .chunk_name = c_path,
                     .chunk_path = c_path,
-                    .chunk_raw = f_contents
+                    .chunk_raw = f_contents,
+                    .is_static = htmlc_parser::is_static(f_contents)
                 });
             }
         }
@@ -88,7 +89,8 @@ namespace htmlc {
                 resolved_pages.push_back(htmlc::chunk{
                     .chunk_name = c_path,
                     .chunk_path = c_path,
-                    .chunk_raw = f_contents
+                    .chunk_raw = f_contents,
+                    .is_static = htmlc_parser::is_static(f_contents)
                 });
             }
         }
@@ -126,9 +128,7 @@ int main(int argc, char *argv[]) {
             fmt::print("error: {}\n exit code: 1\n", config_err);
             return 1;
         }
-
-        fmt::print("{}\n", htmlc_parser::to_directive("render", "foo"));
-        fmt::print("{}\n", htmlc::get_chunkmap(conf).resolved_pages.size());
+        fmt::print("{}\n", htmlc::get_chunkmap(conf).resolved_pages[0].is_static);
     }
     else {
         fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs\nexit code: 1\n");

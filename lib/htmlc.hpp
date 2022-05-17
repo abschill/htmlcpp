@@ -8,12 +8,12 @@
 #include "fmt/format.h"
 #include <fmt/core.h>
 #include <fmt/color.h>
-#include "parser.hpp"
+#include "parser.cpp"
+#include <regex.h>
 
 namespace fs = std::filesystem;
 using std::ifstream;
 using std::string;
-
 // bind method to call config from file with given generic
 namespace htmlc {
 
@@ -21,6 +21,7 @@ namespace htmlc {
         std::string chunk_name;
         std::string chunk_path;
         std::string chunk_raw;
+        bool is_static;
     } chunk;
 
     typedef struct {
