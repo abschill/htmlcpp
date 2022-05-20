@@ -5,32 +5,22 @@
 // root namespace
 namespace htmlc {
 
-    struct info {
-        config u_config{};
-    };
-
     template<>
-    config fromJson<config>(dj::json const& config) {
+    Config fromJson<Config>(dj::json const& config) {
         return {config["root"], config["chunks"], config["pages"]};
     }
 
-    template<>
-    info fromJson<info>(dj::json const& info) {
-        return {fromJson<config>(info["config"])};
-    }
-
-    config find_config(string config_path) {
+    Config find_config(string config_path) {
         fs::path p = htmlc_i::valid_cpath(config_path);
         dj::json conf;
         fs::path c_path = p / "htmlc.json";
-        string c
-	  _string = htmlc_i::file_to_string(c_path);
+        string c_string = htmlc_i::file_to_string(c_path);
         auto res = conf.read(c_string);
-        return res ? htmlc::fromJson<config>(conf["config"]):
+        return res ? htmlc::fromJson<Config>(conf["config"]):
         throw std::invalid_argument("htmlc.json not defined");
     }
 
-    void print_config(htmlc::config conf) {
+    void print_config(htmlc::Config conf) {
         fmt::print(fg(fmt::color::green),"resolved config: \n");
         fmt::print("{{\n");
         htmlc_i::print_config_entry("root", conf.root);
@@ -42,7 +32,7 @@ namespace htmlc {
     }
 
     // return a string with any error from validating the config, so if there is an issue the top level process can format the string in the error msg
-    string validate_config(htmlc::config conf) {
+    string validate_config(htmlc::Config conf) {
         if(conf.silent_errors) {
             return "";
         }
@@ -62,9 +52,9 @@ namespace htmlc {
         return "";
     }
 
-    htmlc::chunkmap get_chunkmap(htmlc::config conf) {
-        std::vector<htmlc::chunk> resolved_chunks = {};
-        std::vector<htmlc::chunk> resolved_pages = {};
+    htmlc::Chunkmap get_chunkmap(htmlc::Config conf) {
+        std::vector<htmlc::Chunk> resolved_chunks = {};
+        std::vector<htmlc::Chunk> resolved_pages = {};
         std::string root = conf.root;
         std::string chunks = root + "/" + conf.chunks;
         std::string pages = root + "/" + conf.pages;
@@ -74,7 +64,7 @@ namespace htmlc {
             bool is_valid = htmlc_i::target_isvalid(c_path);
             if(is_valid) {
                 string f_contents = htmlc_i::file_to_string(c_path);
-                resolved_chunks.push_back(htmlc::chunk{
+                resolved_chunks.push_back(htmlc::Chunk{
                     .chunk_name = c_path,
                     .chunk_path = c_path,
                     .chunk_raw = f_contents,
@@ -87,7 +77,7 @@ namespace htmlc {
             bool is_valid = htmlc_i::target_isvalid(c_path);
             if(is_valid) {
                 string f_contents = htmlc_i::file_to_string(c_path);
-                resolved_pages.push_back(htmlc::chunk{
+                resolved_pages.push_back(htmlc::Chunk{
                     .chunk_name = c_path,
                     .chunk_path = c_path,
                     .chunk_raw = f_contents,
@@ -95,10 +85,10 @@ namespace htmlc {
                 });
             }
         }
-        return htmlc::chunkmap{ resolved_chunks, resolved_pages };
+        return htmlc::Chunkmap{ resolved_chunks, resolved_pages };
     };
 
-    void print_chunkmap(htmlc::config conf) {
+    void print_chunkmap(htmlc::Config conf) {
         std::string root = conf.root;
         std::string chunks = root + "/" + conf.chunks;
         std::string pages = root + "/" + conf.pages;
@@ -121,14 +111,15 @@ namespace htmlc {
 
 int main(int argc, char *argv[]) {
     if(argc > 1) {
-        htmlc::config conf = htmlc::find_config(argv[1]);
-        htmlc::print_config(conf);
+        htmlc::Config conf = htmlc::find_config(argv[1]);
         string config_err = htmlc::validate_config(conf);
 
         if(config_err != "") {
             fmt::print("error: {}\n exit code: 1\n", config_err);
             return 1;
         }
+
+        htmlc::print_config(conf);
 	/**
 	 * Todo: we have the following information at this stage:
 	 * 1. map of the chunks relative to the submitted configuration

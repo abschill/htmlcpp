@@ -17,25 +17,34 @@ using std::string;
 // bind method to call config from file with given generic
 namespace htmlc {
     typedef struct {
-        std::string chunk_name;
-        std::string chunk_path;
-        std::string chunk_raw;
+        string chunk_name;
+        string chunk_path;
+        string chunk_raw;
         bool is_static;
-    } chunk;
+    } Chunk;
 
     typedef struct {
-        std::vector<chunk> resolved_chunks;
-        std::vector<chunk> resolved_pages;
-    } chunkmap;
+        std::vector<Chunk> resolved_chunks;
+        std::vector<Chunk> resolved_pages;
+    } Chunkmap;
 
-    struct config {
-        std::string root{}; // root path relative to <cwd>
-        std::string chunks{}; //partial root relative to <cwd>/<pathRoot>
-        std::string pages{}; //template root relative to <cwd>/<pathRoot>
+    struct OutputOptions {
+        string dir;
+    };
+
+    struct Config {
+        string root{}; // root path relative to <cwd>
+        string chunks{}; //partial root relative to <cwd>/<pathRoot>
+        string pages{}; //template root relative to <cwd>/<pathRoot>
         bool dry; //whether or not to compile the HTML or just test for any errors in the compilation process
         bool silent_errors; //if true, try to push through any compilation errors without resolving the error.
     };
-  
+
+    struct HTMLCFileData {
+        Config config{};
+        OutputOptions output{};
+    };
+
     template <typename T>
     T fromJson(dj::json const& json) {
         return json.as<T>;
@@ -45,7 +54,7 @@ namespace htmlc {
 // internals for root lib namespace (logging, validation, etc)
 namespace htmlc_i {
 
-    string file_to_string(const string& path) {
+    string file_to_string(string path) {
         ifstream input_file(path);
         if(!input_file.is_open()) {
             throw std::invalid_argument("config path invalid");
