@@ -1,125 +1,17 @@
 #include <HTMLC.h>
-#include "htmlc.hpp"
-
-
-// root namespace
-namespace htmlc {
-
-    template<>
-    Config fromJson<Config>(dj::json const& config) {
-        return {config["root"], config["chunks"], config["pages"]};
-    }
-
-    Config find_config(string config_path) {
-        fs::path p = htmlc_i::valid_cpath(config_path);
-        dj::json conf;
-        fs::path c_path = p / "htmlc.json";
-        string c_string = htmlc_i::file_to_string(c_path);
-        auto res = conf.read(c_string);
-        return res ? htmlc::fromJson<Config>(conf["config"]):
-        throw std::invalid_argument("htmlc.json not defined");
-    }
-
-    void print_config(htmlc::Config conf) {
-        fmt::print(fg(fmt::color::green),"resolved config: \n");
-        fmt::print("{{\n");
-        htmlc_i::print_config_entry("root", conf.root);
-        htmlc_i::print_config_entry("chunks", conf.chunks);
-        htmlc_i::print_config_entry("pages", conf.pages);
-        htmlc_i::print_config_entry("dry", conf.dry ? "true" : "false");
-        htmlc_i::print_config_entry("silent_errors", conf.silent_errors ? "true" : "false");
-        fmt::print("}}\n");
-    }
-
-    // return a string with any error from validating the config, so if there is an issue the top level process can format the string in the error msg
-    string validate_config(htmlc::Config conf) {
-        if(conf.silent_errors) {
-            return "";
-        }
-
-        if(!fs::exists(conf.root)) {
-            return "path root";
-        }
-
-        if(!fs::exists(htmlc_i::append_paths(conf.root, conf.chunks))) {
-            return "<pathRoot>/partials";
-        }
-
-        if(!fs::exists(htmlc_i::append_paths(conf.root, conf.pages))) {
-            return "<pathRoot>/templates";
-        }
-
-        return "";
-    }
-
-    htmlc::Chunkmap get_chunkmap(htmlc::Config conf) {
-        std::vector<htmlc::Chunk> resolved_chunks = {};
-        std::vector<htmlc::Chunk> resolved_pages = {};
-        std::string root = conf.root;
-        std::string chunks = root + "/" + conf.chunks;
-        std::string pages = root + "/" + conf.pages;
-
-        for (const auto & entry : fs::directory_iterator(chunks)) {
-            string c_path = entry.path();
-            bool is_valid = htmlc_i::target_isvalid(c_path);
-            if(is_valid) {
-                string f_contents = htmlc_i::file_to_string(c_path);
-                resolved_chunks.push_back(htmlc::Chunk{
-                    .chunk_name = c_path,
-                    .chunk_path = c_path,
-                    .chunk_raw = f_contents,
-                    .is_static = htmlc_parser::is_static(f_contents)
-                });
-            }
-        }
-        for (const auto & entry : fs::directory_iterator(pages)) {
-            string c_path = entry.path();
-            bool is_valid = htmlc_i::target_isvalid(c_path);
-            if(is_valid) {
-                string f_contents = htmlc_i::file_to_string(c_path);
-                resolved_pages.push_back(htmlc::Chunk{
-                    .chunk_name = c_path,
-                    .chunk_path = c_path,
-                    .chunk_raw = f_contents,
-                    .is_static = htmlc_parser::is_static(f_contents)
-                });
-            }
-        }
-        return htmlc::Chunkmap{ resolved_chunks, resolved_pages };
-    };
-
-    void print_chunkmap(htmlc::Config conf) {
-        std::string root = conf.root;
-        std::string chunks = root + "/" + conf.chunks;
-        std::string pages = root + "/" + conf.pages;
-
-        for (const auto & entry : fs::directory_iterator(chunks)) {
-            string c_path = entry.path();
-            bool is_valid = htmlc_i::target_isvalid(c_path);
-            if(is_valid) fmt::print(fg(fmt::color::sea_green), "Chunk:\n{}\n", c_path);
-        }
-        for (const auto & entry : fs::directory_iterator(pages)) {
-            string c_path = entry.path();
-            bool is_valid = htmlc_i::target_isvalid(c_path);
-            if(is_valid) {
-                fmt::print(fg(fmt::color::sea_green), "Page: \n{}\n", c_path);
-                fmt::print("Content: \n{}\n", htmlc_i::file_to_string(c_path));
-            }
-        }
-    }
-}
+#include "config.cpp"
 
 int main(int argc, char *argv[]) {
     if(argc > 1) {
-        htmlc::Config conf = htmlc::find_config(argv[1]);
-        string config_err = htmlc::validate_config(conf);
+        htmlc_config::Config conf = htmlc_config::find_config(argv[1]);
+        string config_err = htmlc_config::validate_config(conf);
 
         if(config_err != "") {
             fmt::print("error: {}\n exit code: 1\n", config_err);
             return 1;
         }
 
-        htmlc::print_config(conf);
+        htmlc_config::print_config(conf);
 	/**
 	 * Todo: we have the following information at this stage:
 	 * 1. map of the chunks relative to the submitted configuration
@@ -129,7 +21,7 @@ int main(int argc, char *argv[]) {
 	 * 1. tokenization stage for each non-static chunk that was resolved.
 	 * 2. generic struct mappings for arbitrary user input into chunk input configuration attribute
 	 **/
-        fmt::print("{}\n", htmlc::get_chunkmap(conf).resolved_pages[0].is_static);
+        fmt::print("{}\n", htmlc_config::get_chunkmap(conf).resolved_pages[0].is_static);
     }
     else {
         fmt::print("Enter the path of your htmlc config, or submit inline arguments to parse as key value pairs\nexit code: 1\n");

@@ -8,8 +8,8 @@ add_subdirectory(include/djson)
 add_subdirectory(include/fmt)
 add_executable(HTMLC)
 target_sources(HTMLC PRIVATE
-    lib/htmlc.hpp
-    lib/htmlc.cpp
+    lib/config.hpp
+	lib/htmlc.cpp
 )
 configure_file(HTMLC.in.h HTMLC.h)
 target_link_libraries(HTMLC djson::djson fmt::fmt)
