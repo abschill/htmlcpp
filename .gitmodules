@@ -1,9 +1,9 @@
-[submodule "djson"]
-	path = djson
-	url = git@github.com:abschill/djson.git
 [submodule "fmt"]
-	path = fmt
+	path = include/fmt
 	url = git@github.com:fmtlib/fmt.git
 [submodule "include/yaml-parser"]
 	path = include/yaml-parser
 	url = git@github.com:abschill/yaml-cpp.git
+[submodule "json-parser"]
+	path = include/djson
+	url = git@github.com:abschill/djson.git

@@ -4,8 +4,8 @@ project(HTMLC VERSION 1.0)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-add_subdirectory(djson)
-add_subdirectory(fmt)
+add_subdirectory(include/djson)
+add_subdirectory(include/fmt)
 add_executable(HTMLC)
 target_sources(HTMLC PRIVATE
     lib/htmlc.hpp
