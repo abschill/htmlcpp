@@ -7,3 +7,6 @@
 [submodule "json-parser"]
 	path = include/djson
 	url = git@github.com:abschill/djson.git
+[submodule "formatter"]
+	path = include/fmt
+	url = git@github.com:abschill/fmt.git
