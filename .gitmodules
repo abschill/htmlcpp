@@ -4,3 +4,6 @@
 [submodule "fmt"]
 	path = fmt
 	url = git@github.com:fmtlib/fmt.git
+[submodule "include/yaml-parser"]
+	path = include/yaml-parser
+	url = git@github.com:abschill/yaml-cpp.git

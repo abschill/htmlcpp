@@ -1,6 +1,6 @@
 {
     "config": {
-        "root": "views",
+        "root": "test/t1/views",
         "chunks": "partials",
         "pages": "templates",
         "run_dry": false

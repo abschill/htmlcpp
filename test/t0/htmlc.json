@@ -1,0 +1,9 @@
+{
+    "config": {
+        "root": "test/t0/views",
+        "chunks": "partials",
+        "pages": "templates",
+        "run_dry": false
+    },
+    "chunk_data": {}
+}
