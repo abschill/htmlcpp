@@ -10,3 +10,6 @@
 [submodule "formatter"]
 	path = include/fmt
 	url = git@github.com:abschill/fmt.git
+[submodule "ini-parser"]
+	path = include/ini-parser
+	url = git@github.com:abschill/simpleini.git
